@@ -7,8 +7,23 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"gavana/graft"
+	"github.com/bendowlingtech/gavana/graft"
+	"github.com/spf13/cobra"
 )
+
+
+func makeMigrationsCmd() *cobra.Command {
+	return &cobra.Command{
+		Use: "make:migrations",
+		Short: "Generate database migrations",
+		Run: func(cmd *cobra.Command, args []string) {
+			models := []any{
+
+			}
+			generateMigrations(models)
+		},
+	}
+}
 
 func generateMigrations(models []any) {
 
@@ -28,7 +43,9 @@ func generateMigrations(models []any) {
 	writeMigrationFile(upQueries, downQueries)
 }
 
-func generateQueries(itoa string, model any) (interface{}, interface{}) {
+func generateQueries(tableName string, model any) {
+	val := reflect.ValueOf(model)
+	typeOfModel := val.Type()
 
 }
 
