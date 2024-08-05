@@ -34,8 +34,8 @@ func generateMigrations(models []any) {
 
 	var upQueries []string
 	var downQueries []string
-	for name, model := range models {
-		upQuery,downQuery := generateQueries(strconv.Itoa(name), model)
+	for _, model := range models {
+		upQuery,downQuery := generateQueries(model)
 		upQueries = append(upQueries, upQuery)
 		downQueries = append(downQueries, downQuery)
 	}
@@ -43,9 +43,15 @@ func generateMigrations(models []any) {
 	writeMigrationFile(upQueries, downQueries)
 }
 
-func generateQueries(tableName string, model any) {
-	val := reflect.ValueOf(model)
-	typeOfModel := val.Type()
+func generateQueries(model any) (string,string) {
+	rtype := reflect.TypeOf(model)
+	for i := 0; i < rtype.NumField(); i++ {
+		name := rtype.Name()
+		field := rtype.Field(i)
+
+	}
+	return upQuery,downQuery
+
 
 }
 
