@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -52,7 +54,6 @@ func generateQueries(model any) (string,string) {
 	}
 	return upQuery,downQuery
 
-
 }
 
 func tableExists(db *graft.Graft, tableName string) bool {
@@ -66,7 +67,35 @@ func tableExists(db *graft.Graft, tableName string) bool {
 
 func writeMigrationFile(upQueries, downQueries []string) {
 	timestamp := time.Now()
+	filename := fmt.Sprintf("migrations/%s_migration.sql", timestamp)
 
+	f, err := os.Create(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	_, err = f.WriteString("-- Up Migration\n")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, query := range upQueries {
+		_, err = f.WriteString(query + "\n")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	_, err = f.WriteString("\n-- Down Migration\n")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, query := range downQueries {
+		_, err = f.WriteString(query + "\n")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 }
 
