@@ -26,9 +26,9 @@ func(g *Graft) Table(tableName string) *QueryBuilder {
 	}
 }
 
-func (qb QueryBuilder) Select(columns ...string) *QueryBuilder {
+func (qb *QueryBuilder) Select(columns ...string) *QueryBuilder {
 	qb.selectCols = columns
-	return &qb
+	return qb.graft.db.QueryRow(query, qb.args...).Scan(dest)
 }
 
 func (qb *QueryBuilder) First() error{

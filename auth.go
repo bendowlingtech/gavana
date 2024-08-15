@@ -5,6 +5,10 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
+type auth struct {
+
+}
+
 type Params struct {
 	memory      uint32
 	iterations  uint32
@@ -24,7 +28,8 @@ func NewParams() *Params {
 	return p
 }
 
-func basicAuth() {
+func (auth *auth) basicAuth() {
+
 
 }
 
@@ -45,4 +50,8 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 	}
 
 	return b, nil
+}
+
+func basicAuth() {
+
 }
