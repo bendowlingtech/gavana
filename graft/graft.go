@@ -6,7 +6,7 @@ import (
 )
 
 type Graft struct {
-	db *pgxpool.Pool
+	Db *pgxpool.Pool
 }
 
 type QueryBuilder struct {
@@ -28,12 +28,12 @@ func(g *Graft) Table(tableName string) *QueryBuilder {
 
 func (qb *QueryBuilder) Select(columns ...string) *QueryBuilder {
 	qb.selectCols = columns
-	return qb.graft.db.QueryRow(query, qb.args...).Scan(dest)
+	return qb.graft.Db.QueryRow(query, qb.args...).Scan(dest)
 }
 
 func (qb *QueryBuilder) First() error{
 	query := qb.buildQuery(true)
-	return qb.graft.db.QueryRow(query, qb.args...).Scan(dest)
+	return qb.graft.Db.QueryRow(query, qb.args...).Scan(dest)
 }
 
 func (qb *QueryBuilder) buildQuery(singleRecord bool) string {
