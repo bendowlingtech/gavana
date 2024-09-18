@@ -11,6 +11,7 @@ import (
 
 	"github.com/bendowlingtech/gavana/graft"
 	"github.com/spf13/cobra"
+
 )
 
 func makeMigrationsCmd() *cobra.Command {
@@ -18,13 +19,18 @@ func makeMigrationsCmd() *cobra.Command {
 		Use:   "make:migrations",
 		Short: "Generate database migrations",
 		Run: func(cmd *cobra.Command, args []string) {
-			var models []interface{}
-			generateMigrations(models)
-		},
-	}
+			generateMigrations()
+			},
+		}
 }
 
-func generateMigrations(models []interface{}) {
+func Execute() {
+	rootCmd := &cobra.Command{Use: "app"}
+	rootCmd.AddCommand(makeMigrationsCmd())
+	rootCmd.Execute()
+}
+
+func generateMigrations() {
 	db, err := graft.New()
 	if err != nil {
 		log.Fatal(err)
@@ -32,7 +38,7 @@ func generateMigrations(models []interface{}) {
 
 	var upQueries []string
 	var downQueries []string
-	for _, model := range models {
+	for _, model := range graft.RegisteredModels {
 		upQuery, downQuery := generateQueries(model, db)
 		upQueries = append(upQueries, upQuery)
 		downQueries = append(downQueries, downQuery)
