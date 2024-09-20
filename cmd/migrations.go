@@ -30,7 +30,7 @@ func Execute() {
 	rootCmd.Execute()
 }
 
-func generateMigrations() {
+func GenerateMigrations() {
 	db, err := graft.New()
 	if err != nil {
 		log.Fatal(err)
