@@ -1,4 +1,4 @@
-package cmd
+package graft
 
 import (
 	"context"
@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bendowlingtech/gavana/graft"
 	"github.com/spf13/cobra"
 
 )
@@ -31,14 +30,14 @@ func Execute() {
 }
 
 func GenerateMigrations() {
-	db, err := graft.New()
+	db, err := New()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var upQueries []string
 	var downQueries []string
-	for _, model := range graft.RegisteredModels {
+	for _, model := range RegisteredModels {
 		upQuery, downQuery := generateQueries(model, db)
 		upQueries = append(upQueries, upQuery)
 		downQueries = append(downQueries, downQuery)
@@ -47,7 +46,7 @@ func GenerateMigrations() {
 	writeMigrationFile(upQueries, downQueries)
 }
 
-func generateQueries(model interface{}, db *graft.Graft) (string, string) {
+func generateQueries(model interface{}, db *Graft) (string, string) {
 	rtype := reflect.TypeOf(model)
 	mName := rtype.Name()
 
@@ -58,7 +57,7 @@ func generateQueries(model interface{}, db *graft.Graft) (string, string) {
 	}
 }
 
-func generateAlterTableQueries(tableName string, model interface{}, db *graft.Graft) (string, string) {
+func generateAlterTableQueries(tableName string, model interface{}, db *Graft) (string, string) {
 
 	return "", ""
 }
@@ -165,7 +164,7 @@ func getColumnType(t reflect.Type) string {
 	return "TEXT"
 }
 
-func tableExists(g *graft.Graft, tableName string) bool {
+func tableExists(g *Graft, tableName string) bool {
 	var exists bool
 	err := g.Db.QueryRow(context.Background(),
 		"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = $1)",
