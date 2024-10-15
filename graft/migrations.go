@@ -18,7 +18,7 @@ func makeMigrationsCmd() *cobra.Command {
 		Use:   "make:migrations",
 		Short: "Generate database migrations",
 		Run: func(cmd *cobra.Command, args []string) {
-			generateMigrations()
+			GenerateMigrations()
 			},
 		}
 }
